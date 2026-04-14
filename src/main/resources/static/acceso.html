@@ -1,0 +1,36 @@
+<head>
+  <meta charset="UTF-8">
+  <title>Acceso</title>
+</head>
+
+<body>
+
+<div id="auth-container" class="auth-card">
+    <div class="tabs">
+        <button id="tab-login" class="active" onclick="showTab('login')">Iniciar Sesión</button>
+        <button id="tab-register" onclick="showTab('register')">Registrarse</button>
+    </div>
+
+    <form id="login-form" class="auth-form">
+        <h2>Bienvenido de nuevo</h2>
+        <input type="text" id="login-user" placeholder="Usuario" required>
+        <input type="password" id="login-pass" placeholder="Contraseña" required>
+        <button type="submit">ENTRAR</button>
+    </form>
+
+    <form id="register-form" class="auth-form hidden">
+        <h2>Crear cuenta Progen</h2>
+        <input type="text" id="reg-user" placeholder="Elige un usuario" required>
+        <input type="email" id="reg-email" placeholder="Correo electrónico" required>
+        <input type="password" id="reg-pass" placeholder="Contraseña segura" required>
+        <button type="submit">CREAR CUENTA</button>
+    </form>
+    
+    <p id="auth-msg" class="hidden"></p>
+</div>
+
+<!-- ✅ AQUÍ, SIEMPRE AL FINAL -->
+<script src="/js/app.js"></script>
+
+</body>
+</html>

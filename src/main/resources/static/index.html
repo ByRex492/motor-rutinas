@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROGEN | AI Fitness</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans">
+
+    <div class="fixed inset-0 -z-10 gradient-bg" aria-hidden="true"></div>
+
+    <main class="max-w-6xl mx-auto px-6 py-12">
+
+        <header class="text-center mb-16">
+            <h1 class="logo-text">PRO<span>GEN</span></h1>
+            <p class="subtitle">Generador de Rutinas Procedural</p>
+        </header>
+
+        <section class="glass-card" aria-label="Formulario de configuración">
+            <div class="form-grid">
+                <div class="input-container">
+                    <label for="equipo">Equipamiento</label>
+                    <select id="equipo" name="equipo">
+                        <option value="mancuernas">Mancuernas</option>
+                        <option value="sin_equipamiento">Peso corporal</option>
+                        <option value="maquinas_gimnasio">Gimnasio Completo</option>
+                    </select>
+                </div>
+                
+                <div class="input-container">
+                    <label for="peso">Peso (kg)</label>
+                    <input type="number" id="peso" name="peso" placeholder="75" min="30" max="250">
+                </div>
+                
+                <div class="input-container">
+                    <label for="altura">Altura (cm)</label>
+                    <input type="number" id="altura" name="altura" placeholder="175" min="100" max="250">
+                </div>
+                
+                <div class="input-container">
+                    <label for="genero">Género</label>
+                    <select id="genero" name="genero">
+                        <option value="Hombre">Hombre</option>
+                        <option value="Mujer">Mujer</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-4 mt-6">
+                <button type="button" id="btnGenerar">GENERAR ENTRENAMIENTO</button>
+                <button type="button" id="btnPdf">DESCARGAR PDF</button>
+            </div>
+
+            <p id="errorMsg" class="hidden mt-4 text-red-400 text-sm text-center" role="alert"></p>
+        </section>
+
+        <section id="rutinaResult" class="results-grid mt-12" aria-live="polite"></section>
+
+    </main>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
