@@ -52,16 +52,26 @@ public class SecurityConfig {
     }
 
     @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration config = new CorsConfiguration();
+public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration config = new CorsConfiguration();
 
-        config.setAllowedOrigins(List.of("*"));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(List.of("*"));
+    // ✅ FIX: allowedOriginPatterns en lugar de allowedOrigins
+    // allowedOrigins("*") falla con Content-Type: application/json
+    // porque el navegador prohíbe wildcard con cabeceras no-simples.
+    config.setAllowedOriginPatterns(List.of("*"));
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
+    config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+    config.setAllowedHeaders(List.of("*"));
+    config.setAllowedOrigins(List.of(
+        "http://localhost:8080",
+        "http://127.0.0.1:8080"
+    ));
+    // Opcional pero recomendado: cachear el preflight 1 hora
+    config.setMaxAge(3600L);
 
-        return source;
-    }
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", config);
+
+    return source;
+}
 }

@@ -18,7 +18,6 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-// 1. Añadimos "implements UserDetails"
 public class User implements UserDetails {
 
     @Id
@@ -33,68 +32,18 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String password;
 
-    // 2. MÉTODOS OBLIGATORIOS DE USERDETAILS
-    
+    @Enumerated(EnumType.STRING)
+    private Role role;  
+
+    // ── UserDetails ──────────────────────────────────────────────────────────
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Por ahora, todos los usuarios tienen el rol "USER"
-        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
     }
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return true; // La cuenta no caduca
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true; // La cuenta no está bloqueada
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true; // Las credenciales no caducan
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true; // El usuario está activo
-    }
-    // GETTERS Y SETTERS (Imprescindibles para que Spring pueda leer y escribir)
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setRole(Role user) {
-        //  Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setRole'");
-    }
+    @Override public boolean isAccountNonExpired()     { return true; }
+    @Override public boolean isAccountNonLocked()      { return true; }
+    @Override public boolean isCredentialsNonExpired() { return true; }
+    @Override public boolean isEnabled()               { return true; }
 }

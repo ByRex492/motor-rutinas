@@ -21,7 +21,6 @@ function showTab(tab) {
   }
 }
 
-// ✅ EL RESTO DENTRO
 document.addEventListener("DOMContentLoaded", () => {
 
   // LOGIN
@@ -31,15 +30,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const username = document.getElementById("login-user").value;
     const password = document.getElementById("login-pass").value;
 
-    const res = await fetch("http://localhost:8080/api/usuarios/login", {
+    const res = await fetch("/api/usuarios/login", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        username,
-        password
-      })
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password })
     });
 
     if (res.ok) {
@@ -60,16 +54,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const email = document.getElementById("reg-email").value;
     const password = document.getElementById("reg-pass").value;
 
-    const res = await fetch("http://localhost:8080/api/usuarios/registrar", {
+    const res = await fetch("/api/usuarios/registrar", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        name,
-        email,
-        password
-      })
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, password })
     });
 
     if (res.ok) {
@@ -79,5 +67,4 @@ document.addEventListener("DOMContentLoaded", () => {
       alert("Error al registrar");
     }
   });
-
 });
