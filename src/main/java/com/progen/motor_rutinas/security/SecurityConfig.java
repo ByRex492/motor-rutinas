@@ -23,33 +23,30 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationProvider authenticationProvider;
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+@Bean
+public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    http
+        // 1. Configuraciones básicas (CORS y CSRF)
+        .cors(cors -> cors.configure(http))
+        .csrf(csrf -> csrf.disable()) // Vital desactivarlo en APIs REST
+        
+        // 2. Las rutas (El "Portero")
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
+            .requestMatchers("/error", "/favicon.ico", "/h2-console/**").permitAll()
+            .requestMatchers("/", "/index.html", "/acceso.html", "/css/**", "/js/**").permitAll()
+            .requestMatchers("/api/usuarios/**").permitAll()
+            .anyRequest().authenticated()
+        ) // <--- ¡AQUÍ SE CIERRA EL BLOQUE DE RUTAS!
+        
+        // 3. ¡EL FILTRO VA AQUÍ AFUERA! (Enchufado directamente a 'http')
+        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
-        http
-            .csrf(csrf -> csrf.disable())
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .sessionManagement(session -> 
-                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            )
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers(
-                    "/", 
-                    "/index.html", 
-                    "/login.html", 
-                    "/acceso.html",
-                    "/css/**", 
-                    "/js/**", 
-                    "/favicon.ico"
-                ).permitAll()
-                .requestMatchers("/api/usuarios/**").permitAll()
-                .anyRequest().authenticated()
-            )
-            .authenticationProvider(authenticationProvider)
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+    // Permitir consola H2
+    http.headers(headers -> headers.frameOptions(frame -> frame.disable()));
 
-        return http.build();
-    }
+    return http.build();
+}
 
     @Bean
 public CorsConfigurationSource corsConfigurationSource() {

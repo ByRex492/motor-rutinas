@@ -1,17 +1,15 @@
 package com.progen.motor_rutinas.model;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-/**
- * Projection (non-entity) that pairs an {@link Exercise} with the
- * prescribed volume (sets × reps) for a given training day.
- */
-@Getter
-@RequiredArgsConstructor
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class RoutineExercise {
-
-    private final Exercise ejercicio;
-    private final int series;
-    private final int repeticiones;
+    private String nombre;
+    private int series;
+    private int repeticiones;
+    private String descripcion;
 }

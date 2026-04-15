@@ -98,7 +98,7 @@ public class PdfService {
 
             // Exercises
             for (RoutineExercise ej : entry.getValue()) {
-                Paragraph name = new Paragraph("  • " + ej.getEjercicio().getNombre(), FONT_EXNAME);
+                Paragraph name = new Paragraph("  • " + ej.getNombre(), FONT_EXNAME);
                 name.setSpacingBefore(6f);
                 doc.add(name);
 

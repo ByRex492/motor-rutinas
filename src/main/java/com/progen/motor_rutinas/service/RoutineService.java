@@ -1,48 +1,42 @@
 package com.progen.motor_rutinas.service;
 
-import com.progen.motor_rutinas.model.Exercise;
 import com.progen.motor_rutinas.model.RoutineExercise;
-import com.progen.motor_rutinas.repository.EjercicioRepository;
 import org.springframework.stereotype.Service;
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class RoutineService {
 
-    private final EjercicioRepository ejercicioRepository;
-
-    // Constructor para inyectar el repositorio sin usar Lombok
-    public RoutineService(EjercicioRepository ejercicioRepository) {
-        this.ejercicioRepository = ejercicioRepository;
-    }
-
     public Map<String, List<RoutineExercise>> generarRutinaPersonalizada(String equipo) {
-        
-        // 1. Buscamos en la base de datos
-        List<Exercise> dbExercises = ejercicioRepository.findAll();
-        
-        // 2. Filtramos por equipo
-        List<Exercise> filtered = dbExercises.stream()
-        .filter(e -> e.getEquipoNecesario() != null && e.getEquipoNecesario().equalsIgnoreCase(equipo))
-        .toList();
+        // El mapa guardará los días de entrenamiento como "clave" y la lista de ejercicios como "valor"
+        Map<String, List<RoutineExercise>> rutinaCompleta = new HashMap<>();
+        List<RoutineExercise> dia1 = new ArrayList<>();
 
-        Map<String, List<RoutineExercise>> weeklyRoutine = new LinkedHashMap<>();
-        String[] days = {"Monday", "Wednesday", "Friday"};
-
-        for (String day : days) {
-            List<RoutineExercise> dailyList = new ArrayList<>();
-            
-            List<Exercise> shuffleList = new ArrayList<>(filtered);
-            Collections.shuffle(shuffleList);
-            
-            // 3. Creamos objetos RoutineExercise (del modelo) y los metemos en la lista
-            shuffleList.stream().limit(3).forEach(e -> 
-                dailyList.add(new RoutineExercise(e, 3, 12))
-            );
-
-            weeklyRoutine.put(day, dailyList);
+        // LÓGICA PROCEDURAL BÁSICA
+        if ("mancuernas".equalsIgnoreCase(equipo)) {
+            dia1.add(new RoutineExercise("Curl de Bíceps alterno", 3, 12, "Mantén los codos pegados al cuerpo."));
+            dia1.add(new RoutineExercise("Press de Pecho en suelo", 4, 10, "Baja los brazos hasta tocar el suelo."));
+            dia1.add(new RoutineExercise("Zancadas con peso", 3, 15, "Espalda recta y paso firme."));
+        } 
+        else if ("sin_equipamiento".equalsIgnoreCase(equipo)) {
+            dia1.add(new RoutineExercise("Flexiones de pecho", 4, 15, "Baja hasta casi tocar el suelo."));
+            dia1.add(new RoutineExercise("Sentadillas al aire", 4, 20, "Rompe el paralelo al bajar."));
+            dia1.add(new RoutineExercise("Plancha abdominal", 3, 60, "Tiempo en segundos. Mantén el core tenso."));
+        } 
+        else {
+            // Por defecto (Máquinas de gimnasio)
+            dia1.add(new RoutineExercise("Press de Banca con Barra", 4, 10, "Controla la fase excéntrica."));
+            dia1.add(new RoutineExercise("Jalón al pecho", 4, 12, "Saca pecho al tirar de la polea."));
+            dia1.add(new RoutineExercise("Prensa de piernas", 4, 15, "No bloquees las rodillas arriba."));
         }
 
-        return weeklyRoutine;
+        // Añadimos la lista de ejercicios al día 1
+        rutinaCompleta.put("Día 1: Acondicionamiento Total", dia1);
+
+        return rutinaCompleta;
     }
 }
