@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil | PROGEN</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/app-perfil.js" defer></script>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans">
+
+    <div class="fixed inset-0 -z-10 gradient-bg" aria-hidden="true"></div>
+
+    <main class="max-w-5xl mx-auto px-6 py-12">
+        <a href="/index.html" class="inline-flex items-center text-cyan-400 hover:text-cyan-300 transition-colors mb-8 text-sm font-semibold">
+            VOLVER AL GENERADOR
+        </a>
+
+        <header class="text-center mb-10">
+            <h1 class="logo-text" style="font-size: 2.5rem;">MI <span>PERFIL</span></h1>
+            <p id="perfil-nombre" class="text-xl text-slate-300 mt-2">Cargando usuario...</p>
+        </header>
+
+        <section>
+            <h2 class="text-2xl font-bold text-cyan-400 mb-6 text-center">PLANIFICADOR SEMANAL</h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-7 gap-4" id="semana-container">
+                </div>
+        </section>
+
+        <div class="mt-12 text-center">
+            <button id="btn-logout" class="btn-secondary border-red-500/50 hover:border-red-500 hover:bg-red-500/10 text-red-400">CERRAR SESIÓN</button>
+        </div>
+    </main>
+
+    <div id="modal-ejercicio" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50">
+        <div class="glass-card max-w-md w-full p-8 relative">
+            <h3 id="modal-titulo" class="text-xl font-bold text-cyan-400 mb-4">Añadir Ejercicio</h3>
+            
+            <div class="space-y-4">
+                <div class="input-container">
+                    <label>Seleccionar Ejercicio</label>
+                    <select id="select-ejercicio" class="w-full bg-slate-900 border-slate-700 text-white rounded-lg p-2"></select>
+                </div>
+                <div class="flex gap-4">
+                    <div class="input-container flex-1">
+                        <label>Series</label>
+                        <input type="number" id="input-series" value="4">
+                    </div>
+                    <div class="input-container flex-1">
+                        <label>Reps</label>
+                        <input type="number" id="input-reps" value="12">
+                    </div>
+                </div>
+                <button id="btn-guardar-item" class="btn-primary w-full mt-4">GUARDAR EN EL DÍA</button>
+                <button onclick="cerrarModal()" class="w-full text-slate-400 text-sm mt-2 hover:text-white">CANCELAR</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

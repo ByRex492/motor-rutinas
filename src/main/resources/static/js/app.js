@@ -86,15 +86,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (btnGenerar) {
     btnGenerar.addEventListener("click", async () => {
+      // ✅ 1. AHORA SÍ RECOGEMOS TODOS LOS DATOS
       const equipo = document.getElementById("equipo").value;
       const peso = document.getElementById("peso").value;
       const altura = document.getElementById("altura").value;
       const genero = document.getElementById("genero").value;
+      
+      // Intentamos recoger la edad (si el input existe en el HTML), si no, por defecto 25
+      const edadInput = document.getElementById("edad");
+      const edad = edadInput && edadInput.value ? edadInput.value : 25;
 
       const token = localStorage.getItem("token");
       if (!token) {
         alert("Debes iniciar sesión para generar una rutina.");
-        window.location.href = "/acceso.html"; // ✅ Corregido
+        window.location.href = "/acceso.html"; 
         return;
       }
 
@@ -107,22 +112,23 @@ document.addEventListener("DOMContentLoaded", () => {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${token}` 
           },
-          body: JSON.stringify({ equipo, peso, altura, genero })
+          // ✅ 2. ENVIAMOS TODOS LOS PARÁMETROS, INCLUIDA LA EDAD
+          body: JSON.stringify({ equipo, peso, altura, genero, edad })
         });
 
         if (res.ok) {
           if (res.status === 204) {
-             resultContainer.innerHTML = `<p class="text-yellow-400 text-center">No hay ejercicios para este equipo.</p>`;
+             resultContainer.innerHTML = `<p class="text-yellow-400 text-center">No hay ejercicios para estos parámetros.</p>`;
              return; 
           }
           
           const rutina = await res.json();
-          pintarRutina(rutina); // Llamamos al "pintor" nuevo
+          pintarRutina(rutina); 
 
         } else if (res.status === 403) {
           alert("Tu sesión ha caducado o no tienes permiso. Vuelve a iniciar sesión.");
           localStorage.removeItem("token"); 
-          window.location.href = "/acceso.html"; // ✅ Corregido (antes decía /index.html)
+          window.location.href = "/acceso.html"; 
         } else {
           resultContainer.innerHTML = `<p class="error-text">Error del servidor: ${res.status}</p>`;
         }
@@ -130,6 +136,52 @@ document.addEventListener("DOMContentLoaded", () => {
         console.error("Error exacto del fetch:", err);
         resultContainer.innerHTML = `<p class="error-text">Error de conexión con el servidor.</p>`;
       }
+    });
+  }
+
+  if (btnPdf) {
+    btnPdf.addEventListener("click", async () => {
+       const token = localStorage.getItem("token");
+       if (!token) {
+           alert("Inicia sesión primero.");
+           window.location.href = "/acceso.html"; 
+           return;
+       }
+
+       // ✅ 3. PARA EL PDF TAMBIÉN NECESITAMOS ENVIAR TODOS LOS DATOS
+       const equipo = document.getElementById("equipo").value;
+       const peso = document.getElementById("peso").value;
+       const altura = document.getElementById("altura").value;
+       const genero = document.getElementById("genero").value;
+       const edadInput = document.getElementById("edad");
+       const edad = edadInput && edadInput.value ? edadInput.value : 25;
+
+       try {
+           const res = await fetch("/api/rutinas/pdf", {
+               method: "POST",
+               headers: { 
+                   "Content-Type": "application/json",
+                   "Authorization": `Bearer ${token}` 
+               },
+               // ✅ 4. SE LO MANDAMOS TODO A JAVA
+               body: JSON.stringify({ equipo, peso, altura, genero, edad })
+           });
+
+           if (res.ok) {
+               const blob = await res.blob();
+               const url = window.URL.createObjectURL(blob);
+               const a = document.createElement("a");
+               a.href = url;
+               a.download = "Mi_Rutina_PROGEN.pdf";
+               a.click();
+               window.URL.revokeObjectURL(url);
+           } else {
+               alert("Error al generar el PDF.");
+           }
+       } catch (err) {
+           console.error("Error al descargar PDF:", err);
+           alert("Error de conexión.");
+       }
     });
   }
 
@@ -201,5 +253,6 @@ function pintarRutina(rutinaDatos) {
 
         card.innerHTML = htmlEjercicios;
         resultContainer.appendChild(card);
+        
     }
 }

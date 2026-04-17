@@ -23,14 +23,12 @@ public class RoutineController {
         this.pdfService = pdfService;
     }
 
-    // 1. Cambiado a POST y usamos Map para recibir el JSON
     @PostMapping("/generar")
     public ResponseEntity<Map<String, List<RoutineExercise>>> generarRutina(
             @RequestBody Map<String, String> requestData) { 
         
-        // Sacamos el valor "equipo" que nos envía el Javascript
-        String equipo = requestData.get("equipo"); 
-        Map<String, List<RoutineExercise>> rutina = routineService.generarRutinaPersonalizada(equipo);
+        // ¡LA CLAVE ESTÁ AQUÍ! Le pasamos 'requestData' entero al servicio, no solo el equipo.
+        Map<String, List<RoutineExercise>> rutina = routineService.generarRutinaPersonalizada(requestData);
 
         if (rutina == null || rutina.isEmpty()) {
             return ResponseEntity.noContent().build();
@@ -39,13 +37,12 @@ public class RoutineController {
         return ResponseEntity.ok(rutina);
     }
 
-    // 2. Cambiado a POST y la ruta a "/pdf"
     @PostMapping("/pdf")
     public ResponseEntity<byte[]> descargarPdf(
             @RequestBody Map<String, String> requestData) { 
 
-        String equipo = requestData.get("equipo");
-        Map<String, List<RoutineExercise>> rutina = routineService.generarRutinaPersonalizada(equipo);
+        // Aquí también le pasamos TODO al servicio para que el PDF salga bien
+        Map<String, List<RoutineExercise>> rutina = routineService.generarRutinaPersonalizada(requestData);
         byte[] pdfBytes = pdfService.generarPdfRutina(rutina);
 
         return ResponseEntity.ok()

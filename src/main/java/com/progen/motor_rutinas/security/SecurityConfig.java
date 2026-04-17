@@ -37,7 +37,7 @@ public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
             .requestMatchers("/", "/index.html", "/acceso.html", "/css/**", "/js/**").permitAll()
             .requestMatchers("/api/usuarios/**").permitAll()
             .anyRequest().authenticated()
-        ) // <--- ¡AQUÍ SE CIERRA EL BLOQUE DE RUTAS!
+        ) 
         
         // 3. ¡EL FILTRO VA AQUÍ AFUERA! (Enchufado directamente a 'http')
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
